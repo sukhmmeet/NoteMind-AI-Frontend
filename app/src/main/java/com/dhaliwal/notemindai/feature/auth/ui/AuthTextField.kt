@@ -10,6 +10,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
+/**
+ * Shared input field for authentication forms.
+ *
+ * [isPassword] changes both the keyboard hint and the way typed characters
+ * are displayed.
+ */
 @Composable
 fun AuthTextField(
     value: String,

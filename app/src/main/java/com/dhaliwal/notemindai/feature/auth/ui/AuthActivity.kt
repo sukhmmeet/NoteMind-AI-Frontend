@@ -46,6 +46,12 @@ import com.dhaliwal.notemindai.core.security.AuthPreferences
 import com.dhaliwal.notemindai.feature.auth.data.repository.AuthRepository
 import com.dhaliwal.notemindai.ui.theme.NoteMindAITheme
 
+/**
+ * Hosts the authentication screen and connects it to [AuthViewModel].
+ *
+ * The activity starts the dashboard only after the ViewModel reports a
+ * successful login or sign-up.
+ */
 class AuthActivity : ComponentActivity() {
 
     private val authViewModel: AuthViewModel by viewModels {
@@ -61,6 +67,7 @@ class AuthActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // MainActivity uses this flag to choose the first tab: login or sign-up.
         val initialIsLogin = intent.getBooleanExtra(EXTRA_IS_LOGIN, true)
 
         setContent {
@@ -68,10 +75,12 @@ class AuthActivity : ComponentActivity() {
                 val isLoading by authViewModel.loading.collectAsState()
                 var serverError by remember { mutableStateOf("") }
 
+                // Listen for one-time results from the network request.
                 LaunchedEffect(authViewModel) {
                     authViewModel.events.collect { event ->
                         when (event) {
                             AuthEvent.Success -> {
+                                // The session tokens are already saved by the repository.
                                 startActivity(
                                     Intent(
                                         this@AuthActivity,
@@ -82,6 +91,7 @@ class AuthActivity : ComponentActivity() {
                             }
 
                             is AuthEvent.Error -> {
+                                // Show the server's message below the form.
                                 serverError = event.message
                             }
                         }
@@ -127,6 +137,8 @@ fun AuthScreen(
     onSignUp: (String, String) -> Unit,
     onForgotPassword: () -> Unit
 ) {
+    // These values belong to the form, so rememberSaveable restores them
+    // when Android recreates the screen, such as after a rotation.
     var isLogin by rememberSaveable {
         mutableStateOf(initialIsLogin)
     }
@@ -253,6 +265,7 @@ fun AuthScreen(
 
         Button(
             onClick = {
+                // Check simple rules locally before making a network request.
                 validationError = when {
                     username.isBlank() ->
                         "Please enter your username."
@@ -273,6 +286,7 @@ fun AuthScreen(
                 }
 
                 if (validationError.isEmpty()) {
+                    // Only send trimmed usernames; keep the password unchanged.
                     if (isLogin) {
                         onLogin(username.trim(), password)
                     } else {
@@ -319,6 +333,7 @@ fun AuthScreen(
 
             OutlinedButton(
                 onClick = {
+                    // Switching modes clears sign-up-only data and old errors.
                     isLogin = !isLogin
                     validationError = ""
                     confirmPassword = ""
