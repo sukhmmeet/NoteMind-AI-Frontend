@@ -51,4 +51,11 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.material.icons.extended)
+
+    implementation(libs.androidx.security.crypto)
+    // Retrofit for networking
+    implementation(libs.retrofit)
+    // Gson converter to automatically convert JSON to Kotlin Data Classes
+    implementation(libs.converter.gson)
 }
