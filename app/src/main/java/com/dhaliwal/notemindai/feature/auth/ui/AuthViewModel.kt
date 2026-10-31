@@ -9,11 +9,18 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+// These events are actions for the screen, not long-lived screen state.
 sealed interface AuthEvent {
     data object Success : AuthEvent
     data class Error(val message: String) : AuthEvent
 }
 
+/**
+ * Runs authentication requests and exposes only UI-friendly state.
+ *
+ * The ViewModel keeps requests alive across recomposition and prevents a
+ * second request while the first one is still running.
+ */
 class AuthViewModel(
     private val repository: AuthRepository
 ) : ViewModel() {
@@ -39,12 +46,14 @@ class AuthViewModel(
     private fun authenticate(
         operation: suspend () -> Result<Unit>
     ) {
+        // Ignore fast repeated taps while the current request is running.
         if (_loading.value) return
 
         viewModelScope.launch {
             _loading.value = true
 
             try {
+                // The repository converts API failures into a Result for the UI.
                 operation().fold(
                     onSuccess = {
                         _events.emit(AuthEvent.Success)
@@ -60,6 +69,7 @@ class AuthViewModel(
             } catch (e: CancellationException) {
                 throw e
             } finally {
+                // Always let the user interact with the form again.
                 _loading.value = false
             }
         }
