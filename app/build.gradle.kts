@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
 
     implementation(libs.androidx.security.crypto)
+    // Jetpack DataStore Preferences for modern preference storage
+    implementation(libs.androidx.datastore.preferences)
     // Retrofit for networking
     implementation(libs.retrofit)
     // Gson converter to automatically convert JSON to Kotlin Data Classes
