@@ -1,6 +1,7 @@
 package com.dhaliwal.notemindai.network.interceptor
 
 import com.dhaliwal.notemindai.data.local.AuthPreferences
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -32,7 +33,7 @@ class AuthInterceptor(
 
         // Attach Authorization header only if it's not an unauthenticated auth endpoint
         if (!isAuthEndpoint) {
-            val token = authPreferences.getAccessToken()
+            val token = runBlocking { authPreferences.getAccessToken() }
 
             if (!token.isNullOrBlank()) {
                 requestBuilder.header("Authorization", "Bearer $token")

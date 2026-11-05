@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NoteMind AI</string>
     <string name="title_activity_auth">AuthActivity</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
 </resources>

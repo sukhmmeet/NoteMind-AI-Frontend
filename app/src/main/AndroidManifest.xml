@@ -33,9 +33,9 @@
             android:theme="@style/Theme.NoteMindAI"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".DashboardActivity"
+            android:name=".feature.dashboard.ui.DashboardActivity"
             android:exported="false"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.NoteMindAI"
             android:windowSoftInputMode="adjustResize" />
     </application>

@@ -33,6 +33,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-compose-material3-adaptive-navigation-suite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

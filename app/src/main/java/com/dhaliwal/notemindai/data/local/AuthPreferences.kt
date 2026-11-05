@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 // Extension property for DataStore singleton instance per Context
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_preferences")
@@ -40,8 +39,8 @@ class AuthPreferences(private val context: Context) {
     /**
      * Retrieves the saved JWT access token, or null if not set.
      */
-    fun getAccessToken(): String? = runBlocking {
-        context.dataStore.data.map { preferences ->
+    suspend fun getAccessToken(): String? {
+        return context.dataStore.data.map { preferences ->
             preferences[JWT_TOKEN_KEY]
         }.first()
     }
@@ -49,8 +48,8 @@ class AuthPreferences(private val context: Context) {
     /**
      * Retrieves the saved refresh token, or null if not set.
      */
-    fun getRefreshToken(): String? = runBlocking {
-        context.dataStore.data.map { preferences ->
+    suspend fun getRefreshToken(): String? {
+        return context.dataStore.data.map { preferences ->
             preferences[REFRESH_TOKEN_KEY]
         }.first()
     }

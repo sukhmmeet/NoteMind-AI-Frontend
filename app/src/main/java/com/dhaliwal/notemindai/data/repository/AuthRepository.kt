@@ -74,8 +74,9 @@ class AuthRepository(
     /**
      * Requests new access and refresh tokens using an existing refresh token.
      */
-    suspend fun refreshToken(request: RefreshTokenRequest): Result<RefreshTokenResponse> {
+    suspend fun refreshToken(): Result<RefreshTokenResponse> {
         return try {
+            val request = RefreshTokenRequest(authPreferences.getRefreshToken() ?: throw Exception("No refresh token available for refresh"))
             val apiResponse = authApi.refreshToken(request)
             val refreshData = apiResponse.data
             if (apiResponse.success && refreshData != null) {
@@ -87,10 +88,6 @@ class AuthRepository(
             } else {
                 Result.failure(Exception(apiResponse.message ?: "Token refresh failed"))
             }
-        } catch (e: HttpException) {
-            Result.failure(e)
-        } catch (e: IOException) {
-            Result.failure(e)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -99,8 +96,9 @@ class AuthRepository(
     /**
      * Logs out the current user and clears stored authentication tokens locally.
      */
-    suspend fun logout(request: RefreshTokenRequest): Result<LogoutResponse> {
+    suspend fun logout(): Result<LogoutResponse> {
         return try {
+            val request = RefreshTokenRequest(authPreferences.getRefreshToken() ?: throw Exception("No refresh token available for logout"))
             val apiResponse = authApi.logout(request)
             val logoutData = apiResponse.data ?: LogoutResponse(
                 success = apiResponse.success,
@@ -111,11 +109,7 @@ class AuthRepository(
                 authPreferences.clearTokens()
             }
             Result.success(logoutData)
-        } catch (e: HttpException) {
-            Result.failure(e)
-        } catch (e: IOException) {
-            Result.failure(e)
-        } catch (e: Exception) {
+        }catch (e: Exception) {
             Result.failure(e)
         }
     }
